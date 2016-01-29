@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="verdantHops">
+<head>
+    <meta charset="UTF-8">
+    <title>Verdant Hops</title>
+    <!-- inject-vendor:css -->
+    <link rel="stylesheet" href="../stylesheets/vendor/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../stylesheets/vendor/font-awesome.css"/>
+
+    <!-- inject: css -->
+    <link rel="stylesheet" href="../stylesheets/style.css"/>
+
+    <!-- inject-vendor:js -->
+    <script src="../lib/angular/angular.js"></script>
+    <script data-require="angular-route@1.4.3" data-semver="1.4.3" src="https://code.angularjs.org/1.4.3/angular-route.js"></script>
+    <script src="../lib/angular-bootstrap/ui-bootstrap.js"></script>
+    <script src="../lib/angular-animate/angular-animate.js"></script>
+
+    <!-- inject:js -->
+    <script src="../javascript/appRoutes.js"></script>
+    <script src="../javascript/angularApp.js"></script>
+
+</head>
+<body>
+<div class="wrapper"></div>
+<div class="navbar navbar-inverse">
+    <div class="navbar-header">
+        <a href="#main" class="navbar-brand"><span class="brand-title">Verdant Hop Growers</span></a>
+        <a class="btn navbar-btn navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+    </div>
+    <div class="navbar-inner">
+        <div class="container">
+            <ul class="nav navbar-nav pull-right">
+                <li class="active">
+                    <a class="brand" href="#main">Home</a>
+                </li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div ng-view></div>
+
+<footer>
+    <ul>
+        <li>Connect with us </li>
+        <li>
+            <a class="social-button" href="" title="Verdant on Facebook">
+                <img src="../images/Facebook.png"/>
+            </a>
+
+            <a class="social-button" href="" title="Verdant on Twitter">
+                <img src="../images/Twitter.png"/>
+            </a>
+
+            <a class="social-button" href="" title="Verdant on Instagram">
+                <img src="../images/Instagram.png"/>
+            </a>
+
+        </li>
+    </ul>
+</footer>
+</body>
+</html>

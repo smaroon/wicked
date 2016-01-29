@@ -1,0 +1,14 @@
+<div class="container">
+    <h3> Contact Us </h3>
+    <hr>
+    <form name="send-email" ng-submit="sendEmail(name, email, message)" >
+        Name:    <br/><input type="text" name="name" placeholder="name" required>    <br/><br/>
+        Email Address: <br/><input type="text" ng-model="email" placeholder="you@email.com" required> <br/><br/>
+
+        Message: <br/>
+        <textarea rows="3" cols="25" placeholder = 'Type your message here.' required></textarea>
+
+        <br/><br/>
+        <input type="submit" value="send" />
+    </form>
+</div>
