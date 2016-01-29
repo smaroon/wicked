@@ -17,7 +17,7 @@ var mongoose = require('mongoose');			// require mongoose and get instance
 mongoose.connect('mongodb://admin:welcome1@ds029595.mongolab.com:29595/hop_comments');			//connect to db on mongolab
 
 var Post = require('./models/Posts');		// include ref to Posts db model
-var comment = require('./models/Comments'); // include ref to Comments db model
+var Comment = require('./models/Comments'); // include ref to Comments db model
 var port = process.env.PORT || 8089;        // set  port
 
 // API ROUTES
@@ -66,7 +66,11 @@ router.route('/posts')
 
              res.json(posts);
             console.log('GET: posts retrieved successfully!');
-        });
+        }).
+            populate({                              // populate is used to tell mongoose to populate the array of comments.
+                path:'comments',
+                populate:{path: 'comment'}
+            });
     });
 
 
@@ -78,9 +82,13 @@ router.route('/posts/:post_id')
             if (err)
                 res.send(err);
 
-            console.log('POST: Success retrieving post by id');
             res.json(post);
-        });
+            console.log('POST: Success retrieving post by id');
+        }).
+        populate({                              // populate is used to tell mongoose to populate the array of comments.
+                path:'comments',
+                populate:{path: 'comment'}
+            });
     })
     // Update a post upvote count with given id.
     .put(function(req,res){
@@ -114,8 +122,51 @@ router.route('/posts/:post_id')
        });
     });
 
+// /api/posts/:post_id/comments
+router.route('/posts/:post_id/comments')
+    // POST a new comment to given post_id
+    .post(function(req,res){
+        Post.findById(req.params.post_id, function(err, post) {
+            if (err){
+                console.log('****');
+                res.send(err);
+            }
+            var comment = new Comment(req.body);
+            comment.post = post._id;
+
+            comment.save(function (err, comment) {
+                if (err) return next(err);
+
+                post.comments.push(comment);
+                post.save(function (err, post_id) {
+                    if (err) return next(err);
+
+                    res.json(comment);
+                });
+            });
+        });
+    });
 
 
+router.route('/posts/:post_id/comments/:comment_id')
+    // Update a comments upvote count with given id.
+    .put(function(req,res){
+        Comment.findById(req.params.comment_id, function(err, comment){
+            if (err){
+
+                res.send(err);
+            }
+            comment.upvotes = comment.upvotes + 1;
+
+            comment.save(function(err){
+                if(err) {
+                    res.send(err);
+                }
+                res.json({message: 'Post upvote ' + req.params.comment_id +' updated!'});
+                console.log('PUT: update of comment upvotes successful!');
+            });
+        });
+        });
 
 
 
