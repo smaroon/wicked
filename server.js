@@ -5,8 +5,22 @@
 
 // call the packages we need
 var express    = require('express');        // call express
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
+
+// =============================================================================
+// Configure settings for SMTP server
+var transport = nodemailer.createTransport(smtpTransport({
+    service: 'Gmail',
+    auth: {
+        user: "wickedhops@gmail.com",
+        pass: "h0psw1ck3d"
+    }
+}));
+// =============================================================================
+
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST in JSON
@@ -31,14 +45,32 @@ router.use(function(req, res, next) {
     next(); // make sure we go to the next routes and don't stop here
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+// test route to make sure everything is working (accessed at GET http://localhost:8089/api)
 router.get('/', function(req, res) {
     res.json({ message: 'Testing api message.' });   
 });
 
-// additional routes here
+// =============================================================================
+// api route for email
+router.route('/send')
+    .get(function(req,res){
+       var mailOptions ={
+           from: "me <wickedhops@gmail.com>",
+           to: 'Bear <cemaroon@gmail.com>',//req.query.to,
+           subject: 'hello', //req.query.subject,
+           text: 'I LOVE YOU!!!' ,//req.query.text
+           html: '<b>I LOVE YOU!!!</b>'
+       }
+        transport.sendMail(mailOptions, function(err,resp){
 
+        if(err) res.end('error');
 
+            res.end('sent');
+
+        });
+    });
+
+// =============================================================================
 // /api/posts
 router.route('/posts')
     //POST posts
@@ -74,7 +106,7 @@ router.route('/posts')
     });
 
 
-
+// =============================================================================
 // api/posts/:post_id
 router.route('/posts/:post_id')
     .get(function(req,res){
@@ -117,20 +149,21 @@ router.route('/posts/:post_id')
            if (err)
            res.send(err);
 
-           res.json({message: 'Post ' + req.params.post_id + ' has been successfully deleted!'});
+           res.json({message: 'DELETE ' + req.params.post_id + ' has been successfully deleted!'});
            console.log('DELETE: posts successful!');
        });
     });
 
+
+// =============================================================================
 // /api/posts/:post_id/comments
 router.route('/posts/:post_id/comments')
     // POST a new comment to given post_id
     .post(function(req,res){
         Post.findById(req.params.post_id, function(err, post) {
-            if (err){
-                console.log('****');
+            if (err)
                 res.send(err);
-            }
+
             var comment = new Comment(req.body);
             comment.post = post._id;
 
@@ -139,6 +172,7 @@ router.route('/posts/:post_id/comments')
 
                 post.comments.push(comment);
                 post.save(function (err, post_id) {
+
                     if (err) return next(err);
 
                     res.json(comment);
@@ -148,6 +182,9 @@ router.route('/posts/:post_id/comments')
     });
 
 
+
+// =============================================================================
+// /api/posts/:post_id/comments/:comment_id
 router.route('/posts/:post_id/comments/:comment_id')
     // Update a comments upvote count with given id.
     .put(function(req,res){
@@ -162,7 +199,7 @@ router.route('/posts/:post_id/comments/:comment_id')
                 if(err) {
                     res.send(err);
                 }
-                res.json({message: 'Post upvote ' + req.params.comment_id +' updated!'});
+                res.json({message: 'Comment upvotes ' + req.params.comment_id +' updated!'});
                 console.log('PUT: update of comment upvotes successful!');
             });
         });
