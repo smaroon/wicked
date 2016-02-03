@@ -15,8 +15,8 @@ var bodyParser = require('body-parser');
 var transport = nodemailer.createTransport(smtpTransport({
     service: 'Gmail',
     auth: {
-        user: "wickedhops@gmail.com",
-        pass: "h0psw1ck3d"
+        user: "",		// TODO: enter email info
+        pass: ""
     }
 }));
 // =============================================================================
@@ -55,11 +55,11 @@ router.get('/', function(req, res) {
 router.route('/send')
     .get(function(req,res){
        var mailOptions ={
-           from: "me <wickedhops@gmail.com>",
-           to: 'Bear <cemaroon@gmail.com>',//req.query.to,
-           subject: 'hello', //req.query.subject,
-           text: 'I LOVE YOU!!!' ,//req.query.text
-           html: '<b>I LOVE YOU!!!</b>'
+           from: "",			// TODO: enter mailOptions info
+           to: '',//req.query.to,
+           subject: '', //req.query.subject,
+           text: '' ,//req.query.text
+           html: '<b></b>'
        }
         transport.sendMail(mailOptions, function(err,resp){
 
